@@ -6,11 +6,10 @@
 
 // Data
 
-
 // DIFFERENT DATA! Contains movement dates, currency and locale
 
 const account1 = {
-  owner: 'Jonas Schmedtmann',
+  owner: 'lokesh sherawat',
   movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
   interestRate: 1.2, // %
   pin: 1111,
@@ -30,7 +29,7 @@ const account1 = {
 };
 
 const account2 = {
-  owner: 'Jessica Davis',
+  owner: 'sachin sherawat',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
@@ -80,29 +79,27 @@ let currentAccount;
 const taarik = new Date();
 // /////////////////////
 
-const calcDisplayDate = function (date){
-  
-  const dates = (date1,date2)=>Math.round(Math.abs((date2-date1)/(1000 *60* 60*24)));
+const calcDisplayDate = function (date) {
+  const dates = (date1, date2) =>
+    Math.round(Math.abs((date2 - date1) / (1000 * 60 * 60 * 24)));
 
-  const daysPassed = dates(new Date(),date);
-  if(daysPassed===0)return 'Today'
-  if(daysPassed===1)return 'Yestarday'
-  if(daysPassed<=7)return `${daysPassed} days ago`
-  return new Intl.DateTimeFormat(currentAccount.locale).format(date)
-  
-}
+  const daysPassed = dates(new Date(), date);
+  if (daysPassed === 0) return 'Today';
+  if (daysPassed === 1) return 'Yestarday';
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+  return new Intl.DateTimeFormat(currentAccount.locale).format(date);
+};
 // /////////////////////
 
 const movementsDisplay = function (acc) {
   containerMovements.innerHTML = '';
 
   const numberormat = new Intl.NumberFormat(acc.locale).format(acc);
-  console.log(numberormat)
+  console.log(numberormat);
 
   acc.movements?.forEach(function (value, i) {
     const typeTransc = value < 0 ? 'withdrawal' : 'deposit';
-    
-    
+
     const nayi_taarik = new Date(acc.movementsDates[i]);
 
     const displayDat = calcDisplayDate(nayi_taarik);
@@ -157,7 +154,6 @@ const displayDeposit = function (account) {
 
 /////////////////////////////////////////////////
 
-
 btnLogin.addEventListener('click', function (e) {
   // preventing page from relod automatically
   e.preventDefault();
@@ -176,15 +172,17 @@ btnLogin.addEventListener('click', function (e) {
   // to remove blinkin cursor from their
   inputLoginPin.blur();
   displayCb();
-// using date as api
-    const option={
-      hour:'numeric'
-      ,minute:'2-digit'
-      ,day:'2-digit'
-      ,month:'short'
-      ,year:'numeric'
-    }
-    labelDate.textContent = new Intl.DateTimeFormat('en-GB',option).format(taarik)
+  // using date as api
+  const option = {
+    hour: 'numeric',
+    minute: '2-digit',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  };
+  labelDate.textContent = new Intl.DateTimeFormat('en-GB', option).format(
+    taarik
+  );
 });
 /////////////////////////////////////////////////
 let timer;
@@ -192,11 +190,11 @@ const displayCb = function () {
   // display movementsDisplay
 
   movementsDisplay(currentAccount);
-console.log(timer)
+  console.log(timer);
 
-  clearTimeout(timer)  
-  timer = displayTimer()
-  
+  clearTimeout(timer);
+  timer = displayTimer();
+
   // display current balance
   labelBalance.textContent = currentAccount.movements.reduce((accum, val) => {
     return accum + val;
@@ -226,8 +224,8 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movements.push(-amt);
     reciverAcc.movements.push(amt);
   }
-  currentAccount.movementsDates.push(new Date().toISOString())
-  reciverAcc.movementsDates.push(new Date().toISOString())
+  currentAccount.movementsDates.push(new Date().toISOString());
+  reciverAcc.movementsDates.push(new Date().toISOString());
   displayCb();
 });
 
@@ -238,10 +236,10 @@ btnLoan.addEventListener('click', function (e) {
   const amunt = Number(inputLoanAmount.value);
   if (amunt > 0 && currentAccount.movements.some(val => val >= amunt * 0.1)) {
     currentAccount.movements.push(amunt);
-    currentAccount.movementsDates.push(new Date())
+    currentAccount.movementsDates.push(new Date());
   }
 
-  setTimeout(() => displayCb(currentAccount), 5000); 
+  setTimeout(() => displayCb(currentAccount), 5000);
   inputLoanAmount.value = '';
 });
 ///////////////////////////////////////////
@@ -276,20 +274,26 @@ console.log(totalBalance);
 
 // //////////////////////////////////////////////////////////////
 
-const displayTimer = function(){
-  let sec=60;
-  let min=2;
-const tick =function(){
-  --sec
-if(sec===0){sec=60,min--}
-if(min>=0){
-  labelTimer.textContent=`${ String(min).padStart(2,0)}:${String(sec).padStart(2,0)}`;
-}if(min===0&&sec===0){
-  containerApp.style.opacity=0;
-  clearInterval(timer)
-  sec=60,min=2}
-}
-tick()
-timer =setInterval( tick,1000);
-return timer
-}
+const displayTimer = function () {
+  let sec = 60;
+  let min = 2;
+  const tick = function () {
+    --sec;
+    if (sec === 0) {
+      (sec = 60), min--;
+    }
+    if (min >= 0) {
+      labelTimer.textContent = `${String(min).padStart(2, 0)}:${String(
+        sec
+      ).padStart(2, 0)}`;
+    }
+    if (min === 0 && sec === 0) {
+      containerApp.style.opacity = 0;
+      clearInterval(timer);
+      (sec = 60), (min = 2);
+    }
+  };
+  tick();
+  timer = setInterval(tick, 1000);
+  return timer;
+};
